@@ -1,10 +1,17 @@
 import React from 'react';
-import Search from './Search';
+import {BrowserRouter as Router, Route, Routes}  from 'react-router-dom';
+import Items from './Items';
+import Details from './Details';
 
 function App() {
   return (
     <>
-      <Search/>
+      <Router>
+        <Routes>
+          <Route path="/" exact element={<Items/>} />
+          <Route path="/:id/details" exact element={<Details/>} />
+        </Routes>
+      </Router>
     </>
   )
 }

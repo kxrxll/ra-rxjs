@@ -1,14 +1,20 @@
-import { CHANGE_SEARCH_FIELD, SEARCH_SKILLS_REQUEST, SEARCH_SKILLS_FAILURE, SEARCH_SKILLS_SUCCESS, } from './actionTypes';
+import { ITEMS_REQUEST, ITEMS_REQUEST_FAILURE, ITEMS_REQUEST_SUCCESS, DETAILS_REQUEST, DETAILS_REQUEST_FAILURE, DETAILS_REQUEST_SUCCESS } from './actionTypes';
 
-export const searchSkillsRequest = search => ({
-  type: SEARCH_SKILLS_REQUEST, payload: {search}
+export const itemsRequest = () => ({
+  type: ITEMS_REQUEST, payload: {}
 });
-export const searchSkillsFailure = error => ({
-  type: SEARCH_SKILLS_FAILURE, payload: {error},
+export const itemsRequestFailure = error => ({
+  type: ITEMS_REQUEST_FAILURE, payload: {error},
 });
-export const searchSkillsSuccess = items => ({
-  type: SEARCH_SKILLS_SUCCESS, payload: {items},
+export const itemsRequestSuccess = items => ({
+  type: ITEMS_REQUEST_SUCCESS, payload: {items},
 });
-export const changeSearchField = search => ({
-  type: CHANGE_SEARCH_FIELD, payload: {search},
+export const detailsRequest = id => ({
+  type: DETAILS_REQUEST, payload: {id},
+});
+export const detailsRequestFailure = error => ({
+  type: DETAILS_REQUEST_FAILURE, payload: {error},
+});
+export const detailsRequestSuccess = item => ({
+  type: DETAILS_REQUEST_SUCCESS, payload: {item},
 });

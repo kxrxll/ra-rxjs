@@ -1,29 +1,36 @@
 import { ofType } from 'redux-observable';
-import { of } from 'rxjs';
+import { of, debounceTime } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { map, filter, debounceTime, switchMap, catchError } from 'rxjs/operators';
-import { CHANGE_SEARCH_FIELD, SEARCH_SKILLS_REQUEST } from '../actions/actionTypes'
+import { map, switchMap, catchError } from 'rxjs/operators';
+import { ITEMS_REQUEST, DETAILS_REQUEST } from '../actions/actionTypes'
 import {
-searchSkillsRequest,
-searchSkillsSuccess,
-searchSkillsFailure,
+  itemsRequestFailure,
+  itemsRequestSuccess,
+  detailsRequestFailure,
+  detailsRequestSuccess
 } from '../actions/index';
 
-export const changeSearchEpic = action$ => action$.pipe(
-  ofType(CHANGE_SEARCH_FIELD),
-  map(o => o.payload.search.trim()),
-  filter(o => o !== ''),
-  debounceTime(100),
-  map(o => searchSkillsRequest(o))
-)
-
-export const searchSkillsEpic = action$ => action$.pipe(
-  ofType(SEARCH_SKILLS_REQUEST),
-  map(o => o.payload.search),
-  map(o => new URLSearchParams({'q': o})),
-  switchMap(o => ajax.getJSON(`http://localhost:7070/api/search?${o}`).pipe(
-    map(o => searchSkillsSuccess(o)),
-    catchError(e => of(searchSkillsFailure(e))),
+export const itemsRequestEpic = action$ => action$.pipe(
+  ofType(ITEMS_REQUEST),
+  switchMap(() => ajax.getJSON('http://localhost:7070/api/services').pipe(
+    map(o => {
+      if (o) {
+        return itemsRequestSuccess(o);
+      }
+    }),
+    catchError(e => of(itemsRequestFailure(e))),
   )),
 );
 
+export const detailsRequestEpic = action$ => action$.pipe(
+  ofType(DETAILS_REQUEST),
+  map(o => o.payload.id),
+  switchMap(o => ajax.getJSON(`http://localhost:7070/api/services/${o}`).pipe(
+    map(o => {
+      if (o) {
+        return detailsRequestSuccess(o);
+      }
+    }),
+    catchError(e => of(detailsRequestFailure(e))),
+  )),
+);
